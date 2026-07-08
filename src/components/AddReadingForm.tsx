@@ -1,4 +1,39 @@
 import React, { useState, useCallback, useEffect } from 'react';
+// Add these two refs near the top of your component
+const cameraInputRef = React.useRef(null);
+const uploadInputRef = React.useRef(null);
+
+// Add these two hidden file inputs (put them right after the form opens)
+
+
+
+
+// Then replace your current "Scan from photo" button with this TWO-BUTTON layout:
+
+   cameraInputRef.current?.click()}
+    disabled={isScanning}
+    className={`flex items-center justify-center gap-2 py-3 rounded-xl border-2 border-dashed transition-colors ${
+      isScanning
+        ? 'border-gray-300 text-gray-400 cursor-not-allowed'
+        : 'border-emerald-400 text-emerald-600 hover:bg-emerald-50 cursor-pointer'
+    }`}
+  >
+    
+    Take Photo
+  
+
+   uploadInputRef.current?.click()}
+    disabled={isScanning}
+    className={`flex items-center justify-center gap-2 py-3 rounded-xl border-2 border-dashed transition-colors ${
+      isScanning
+        ? 'border-gray-300 text-gray-400 cursor-not-allowed'
+        : 'border-blue-400 text-blue-600 hover:bg-blue-50 cursor-pointer'
+    }`}
+  >
+    
+    Upload
+  
+
 import { Camera, X, Sun, Sunset, Moon, CloudMoon, Loader2, AlertTriangle, CheckCircle } from 'lucide-react';
 import { BPReading } from '../types';
 
