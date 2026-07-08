@@ -1,40 +1,5 @@
-import React, { useState, useCallback, useEffect } from 'react';
-// Add these two refs near the top of your component
-const cameraInputRef = React.useRef(null);
-const uploadInputRef = React.useRef(null);
-
-// Add these two hidden file inputs (put them right after the form opens)
-
-
-
-
-// Then replace your current "Scan from photo" button with this TWO-BUTTON layout:
-
-   cameraInputRef.current?.click()}
-    disabled={isScanning}
-    className={`flex items-center justify-center gap-2 py-3 rounded-xl border-2 border-dashed transition-colors ${
-      isScanning
-        ? 'border-gray-300 text-gray-400 cursor-not-allowed'
-        : 'border-emerald-400 text-emerald-600 hover:bg-emerald-50 cursor-pointer'
-    }`}
-  >
-    
-    Take Photo
-  
-
-   uploadInputRef.current?.click()}
-    disabled={isScanning}
-    className={`flex items-center justify-center gap-2 py-3 rounded-xl border-2 border-dashed transition-colors ${
-      isScanning
-        ? 'border-gray-300 text-gray-400 cursor-not-allowed'
-        : 'border-blue-400 text-blue-600 hover:bg-blue-50 cursor-pointer'
-    }`}
-  >
-    
-    Upload
-  
-
-import { Camera, X, Sun, Sunset, Moon, CloudMoon, Loader2, AlertTriangle, CheckCircle } from 'lucide-react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
+import { Camera, Upload, X, Sun, Sunset, Moon, CloudMoon, Loader2, AlertTriangle, CheckCircle } from 'lucide-react';
 import { BPReading } from '../types';
 
 interface AddReadingFormProps {
@@ -71,6 +36,9 @@ export function AddReadingForm({ onAdd, onClose }: AddReadingFormProps) {
   const [isScanning, setIsScanning] = useState(false);
   const [scanWarning, setScanWarning] = useState<string | null>(null);
   const [scanSuccess, setScanSuccess] = useState(false);
+
+  const cameraInputRef = useRef<HTMLInputElement>(null);
+  const uploadInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     return () => {
@@ -189,12 +157,20 @@ export function AddReadingForm({ onAdd, onClose }: AddReadingFormProps) {
 
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-end sm:items-center justify-center p-4">
+      {/* Hidden file inputs */}
       <input
-        id="scan-file-input"
+        ref={cameraInputRef}
         type="file"
         accept="image/*"
         capture="environment"
-        className="absolute opacity-0 pointer-events-none"
+        className="hidden"
+        onChange={handleFileChange}
+      />
+      <input
+        ref={uploadInputRef}
+        type="file"
+        accept="image/*"
+        className="hidden"
         onChange={handleFileChange}
       />
 
@@ -210,21 +186,34 @@ export function AddReadingForm({ onAdd, onClose }: AddReadingFormProps) {
         </div>
 
         <form onSubmit={handleSubmit} className="p-4 space-y-5">
-          {/* Scan from photo button - above the input fields */}
-          <div>
-            <label
-              htmlFor="scan-file-input"
-              className={`flex items-center justify-center gap-2 w-full py-3 rounded-xl border-2 border-dashed transition-colors cursor-pointer ${
+          {/* Two scan buttons - Take Photo and Upload */}
+          <div className="grid grid-cols-2 gap-3">
+            <button
+              type="button"
+              onClick={() => cameraInputRef.current?.click()}
+              disabled={isScanning}
+              className={`flex items-center justify-center gap-2 py-3 rounded-xl border-2 border-dashed transition-colors ${
                 isScanning
-                  ? 'border-gray-300 text-gray-400'
+                  ? 'border-gray-300 text-gray-400 cursor-not-allowed'
                   : 'border-emerald-400 text-emerald-600 hover:bg-emerald-50'
               }`}
             >
               <Camera className="w-5 h-5" />
-              <span className="font-medium">
-                {isScanning ? 'Scanning...' : 'Scan from photo'}
-              </span>
-            </label>
+              <span className="font-medium">Take Photo</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => uploadInputRef.current?.click()}
+              disabled={isScanning}
+              className={`flex items-center justify-center gap-2 py-3 rounded-xl border-2 border-dashed transition-colors ${
+                isScanning
+                  ? 'border-gray-300 text-gray-400 cursor-not-allowed'
+                  : 'border-blue-400 text-blue-600 hover:bg-blue-50'
+              }`}
+            >
+              <Upload className="w-5 h-5" />
+              <span className="font-medium">Upload</span>
+            </button>
           </div>
 
           {/* Scanning overlay */}
